@@ -10,7 +10,7 @@ async function run() {
   try {
     const token = core.getInput('token', { required: true });
     const expirationTime = core.getInput('expiration-time', { required: true });
-    const message = core.getInput('message', { required: true });
+    const message = core.getInput('message');
 
     const octokit = github.getOctokit(token);
     const expirationDate = new Date(Date.now() - (expirationTime * SECONDS_TO_MILLISECONDS));
