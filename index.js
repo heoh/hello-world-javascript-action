@@ -11,7 +11,7 @@ async function run() {
     console.log(token, owner, repo);
     const { data } = await octokit.pulls.list({ owner, repo, state: 'open' });
   
-    // console.log(data);
+    console.log(data);
   
     // console.log(`Hello ${token}!`);
     // const time = (new Date()).toTimeString();
