@@ -9,7 +9,7 @@ async function run() {
     const owner = github.context.payload.sender && github.context.payload.sender.login;
     const repo = github.context.payload.repository && github.context.payload.repository.name;
     console.log(token, owner, repo);
-    // const { data } = await octokit.pulls.list({ owner, repo, state: 'open' });
+    const { data } = await octokit.pulls.list({ owner, repo, state: 'open' });
   
     // console.log(data);
   
