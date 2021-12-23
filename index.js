@@ -4,6 +4,7 @@ const github = require('@actions/github');
 async function run() {
   try {
     const token = core.getInput('token', { required: true });
+    console.log(token);
     const octokit = github.getOctokit(token);
     const owner = github.context.payload.sender && github.context.payload.sender.login;
     const repo = github.context.payload.repository && github.context.payload.repository.name;
