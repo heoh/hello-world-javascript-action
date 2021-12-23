@@ -1,12 +1,20 @@
-name: 'Hello World'
-description: 'Greet someone and record the time'
+name: "Review Reminder"
+description: "Leave a comment on an old pull request"
+branding:
+  icon: 'bell'
+  color: 'purple'
+
 inputs:
   token:
-    description: 'GitHub token'
+    description: "GitHub token"
     required: true
-outputs:
-  time: # id of output
-    description: 'The time we greeted you'
+  expiration-time:
+    description: "Leave a comment when the number of seconds after creating the pull request"
+    required: true
+  message:
+    description: "Contents of the comment"
+    required: false
+    default: "It's time to end this pull request!"
 runs:
   using: 'node12'
   main: 'index.js'
