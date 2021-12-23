@@ -26,7 +26,7 @@ async function run() {
 
       if (needToRemind) {
         console.log(pull._links.comments, aa);
-        remind(pull, message);
+        // remind(pull, message);
       }
     }
 
