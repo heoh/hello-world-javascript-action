@@ -22,10 +22,11 @@ async function run() {
       // if (needToRemind(pull, expiryDate)) {
       const createdDate = new Date(pull.created_at);
       const needToRemind = (createdDate <= expiryDate);
+      const { data: aa } = await octokit.rest.pulls.listReviewComments({ owner, repo, pull_number: pull.number });
 
       if (needToRemind) {
-        console.log(pull._links.comments);
-        // remind(pull, message);
+        console.log(pull._links.comments, aa);
+        remind(pull, message);
       }
     }
 
