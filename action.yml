@@ -17,4 +17,4 @@ inputs:
     default: "It's time to end this pull request!"
 runs:
   using: 'node12'
-  main: 'index.js'
+  main: 'dist/index.js'
