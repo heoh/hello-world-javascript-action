@@ -22,8 +22,7 @@ async function run() {
       // if (needToRemind(pull, expiryDate)) {
       const createdDate = new Date(pull.created_at);
       const needToRemind = (createdDate <= expiryDate);
-      console.log('aga')
-      const { data: aa } = await octokit.rest.issues.listComments({ owner, repo, pull_number: pull.number });
+      const { data: aa } = await octokit.rest.issues.listComments({ owner, repo, issue_number: pull.number });
 
       if (needToRemind) {
         console.log(pull._links.comments, aa);
