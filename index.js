@@ -8,16 +8,17 @@ async function run() {
     const octokit = github.getOctokit(token);
     const owner = github.context.payload.sender && github.context.payload.sender.login;
     const repo = github.context.payload.repository && github.context.payload.repository.name;
-    const { data } = await octokit.pulls.list({ owner, repo, state: 'open' });
+    console.log(token, owner, repo);
+    // const { data } = await octokit.pulls.list({ owner, repo, state: 'open' });
   
-    console.log(data);
+    // console.log(data);
   
-    console.log(`Hello ${token}!`);
-    const time = (new Date()).toTimeString();
-    core.setOutput("time", time);
-    // Get the JSON webhook payload for the event that triggered the workflow
-    const payload = JSON.stringify(github.context.payload, undefined, 2)
-    console.log(`The event payload: ${payload}`);
+    // console.log(`Hello ${token}!`);
+    // const time = (new Date()).toTimeString();
+    // core.setOutput("time", time);
+    // // Get the JSON webhook payload for the event that triggered the workflow
+    // const payload = JSON.stringify(github.context.payload, undefined, 2)
+    // console.log(`The event payload: ${payload}`);
   } catch (error) {
     core.setFailed(error.message);
   }  
