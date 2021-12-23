@@ -73,7 +73,7 @@ async function needToRemind(octokit, pull, expiryDate) {
   }
 
   const { data } = await octokit.rest.issues.listComments({ owner, repo, issue_number: pull.number });
-  const alreadyRemind = data.some(comment => comment.body?.startsWith(REMIND_MARKER));
+  const alreadyRemind = data.some(comment => comment.body.startsWith(REMIND_MARKER));
   return !alreadyRemind;
 }
 
