@@ -65,6 +65,4 @@ async function getPullRequests(octokit) {
   return data;
 }
 
-function needToRemind()
-
 run();
