@@ -1,34 +1,35 @@
 const SECONDS_TO_MILLISECONDS = 1000;
+const REMIND_MARKER = '<span id="review-reminder-remind" />';
 
 const core = require('@actions/core');
 const github = require('@actions/github');
+const owner = github.context.payload.sender && github.context.payload.sender.login;
+const repo = github.context.payload.repository && github.context.payload.repository.name;
 
 async function run() {
   try {
     const token = core.getInput('token', { required: true });
     const expiryPeriod = 60 * SECONDS_TO_MILLISECONDS;
-    const message = "It's time to end this Pull Request!";
+    const message = "It's time to end this pull request!";
 
     const octokit = github.getOctokit(token);
     const expiryDate = new Date(Date.now() - expiryPeriod);
 
-    // const pulls = await getPullRequests(octokit);
-    const owner = github.context.payload.sender && github.context.payload.sender.login;
-    const repo = github.context.payload.repository && github.context.payload.repository.name;
-    const { data } = await octokit.rest.pulls.list({ owner, repo, state: 'open' });
-    const pulls = data;
+    const pulls = await getPullRequests(octokit);
+    // const owner = github.context.payload.sender && github.context.payload.sender.login;
+    // const repo = github.context.payload.repository && github.context.payload.repository.name;
+    // const { data } = await octokit.rest.pulls.list({ owner, repo, state: 'open' });
+    // const pulls = data;
 
-    for (const pull of pulls) {
-      // if (needToRemind(pull, expiryDate)) {
-      const createdDate = new Date(pull.created_at);
-      const needToRemind = (createdDate <= expiryDate);
-      const { data: aa } = await octokit.rest.issues.listComments({ owner, repo, issue_number: pull.number });
-
-      if (needToRemind) {
-        console.log(pull._links.comments, aa);
-        // remind(pull, message);
+    pulls.forEach(async (pull) => {
+      if (await needToRemind(octokit, pull, expiryDate)) {
+      // const createdDate = new Date(pull.created_at);
+      // const { data: aa } = await octokit.rest.issues.listComments({ owner, repo, issue_number: pull.number });
+      // const needToRemind = (createdDate <= expiryDate) && aa.some(comment => comment.body?.startsWith(REMIND_MARKER));
+      // if (needToRemind) {
+        await remind(octokit, pull, message);
       }
-    }
+    });
 
 
     // const lastExpiryDate = new Date(Date.now() - expiryPeriod);
@@ -60,10 +61,29 @@ async function run() {
 }
 
 async function getPullRequests(octokit) {
-  const owner = github.context.payload.sender && github.context.payload.sender.login;
-  const repo = github.context.payload.repository && github.context.payload.repository.name;
   const { data } = await octokit.rest.pulls.list({ owner, repo, state: 'open' });
   return data;
+}
+
+async function needToRemind(octokit, pull, expiryDate) {
+  const createdDate = new Date(pull.created_at);
+  const expired = createdDate <= expiryDate;
+  if (!expired) {
+    return false;
+  }
+
+  const { data } = await octokit.rest.issues.listComments({ owner, repo, issue_number: pull.number });
+  const alreadyRemind = data.some(comment => comment.body?.startsWith(REMIND_MARKER));
+  return !alreadyRemind;
+}
+
+async function remind(octokit, pull, message) {
+  await octokit.rest.issues.createComment({
+    owner,
+    repo,
+    issue_number: pull.number,
+    body: `${REMIND_MARKER}${message}`,
+  });
 }
 
 run();
